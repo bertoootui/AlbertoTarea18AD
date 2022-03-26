@@ -12,43 +12,42 @@ public class Main {
 	
 	private static Connector con = new Connector();
 	private static Connection conn = con.getConnection();
+	private static int sel = 0;
 
 	public static void main(String[] args) {
 		
-		
+		boolean end = false;
 		System.out.println("------BIENVENIDO------ \n 1.-INSERTAR CICLISTA \n 2.-SOLICITAR DATOS ETAPA \n 3.-SALIR");
 		Scanner tec = new Scanner(System.in);
-		int sel = tec.nextInt();
-		switch (sel) {
-		case 1:
-			insert(tec);
-			break;
-		case 2:	
-			getEtapa();
-		default:
-			break;
-		}
-		
+		 
+		while(!end) {
+			sel = tec.nextInt();
+			switch (sel) {
+			case 1:
+				insert(tec);
+				break;
+			case 2:	
+				getEtapa();
+				break;
+			case 3:
+				end = true;
+				break;
+			default:
+				System.out.println("ERR---NO SE RECONOCE EL COMANDO");				
+				break;
+			}//end switch
+			System.out.println("\n------MENU------ \n 1.-INSERTAR CICLISTA \n 2.-SOLICITAR DATOS ETAPA \n 3.-SALIR");
+			
+		}//end while
 
 	}
 
 	private static void getEtapa() {
-		String consulta= "SELECT * FROM ciclistas";
+
+
 		
-		ResultSet rs = con.getCiclistas(consulta, conn);
-		String[] dat = new String [3];
+		con.getCiclistas();
 		
-		try {
-			while(rs.next())
-			{
-				System.out.println("ID: " +rs.getInt("idCICLISTAS") + " --- NOMBRE:"+ rs.getString("NOMBRE")+"\n");
-				
-				
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 	}
 
@@ -60,19 +59,12 @@ public class Main {
 		String equipo = tec.next();
 		System.out.println("TIEMPO (segundos):");
 		int tiempo = tec.nextInt();
+		System.out.println("DORSAL:");
+		int dorsal = tec.nextInt();
 		
-		String consulta = "INSERT INTO ciclistas(NOMBRE,EQUIPO,TIEMPO) VALUES (?,?,?)";
-		try {
-			PreparedStatement st = conn.prepareStatement(consulta);
-			st.setString(1, nombre);
-			st.setString(2, equipo);
-			st.setInt(3, tiempo);
+		con.Update(nombre, equipo, tiempo, dorsal);
 			
-			st.executeUpdate();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		
 		
 		
